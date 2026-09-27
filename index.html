@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>50 Cửa Ải Toán Học</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Hộp hiển thị Bá Khí ở góc trên bên phải */
+        .ba-khi-box {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #f1c40f;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #f1c40f;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Phần chữ xuất hiện phía trên lưới */
+        .header-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .main-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f1c40f;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+            margin: 0 0 8px 0;
+            letter-spacing: 1px;
+        }
+
+        .sub-title {
+            font-size: 16px;
+            color: #00ffff;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        /* Màu các cấp độ */
+        .c-lv1 { background: #3498db; } /* 1-10 */
+        .c-lv2 { background: #2ecc71; } /* 11-30 */
+        .c-lv3 { background: #e67e22; } /* 31-40 */
+        .c-lv4 { background: #9b59b6; } /* 41-50 */
+
+        /* Lưới 50 hình tròn */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            max-width: 900px;
+        }
+
+        .circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            user-select: none;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .circle:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .circle.solved {
+            background: #f1c40f !important;
+            color: #333;
+            text-shadow: none;
+            border: 3px solid #fff;
+            cursor: not-allowed;
+        }
+        
+        .circle.solved:hover {
+            transform: none;
+        }
+
+        /* Cửa sổ Popup (Modal) */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-box {
+            background: #fff;
+            color: #333;
+            width: 450px;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .modal-box h2 {
+            margin-top: 0;
+            color: #e74c3c;
+            text-transform: uppercase;
+        }
+
+        #math-question {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            white-space: pre-line;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #3498db;
+            border-radius: 6px;
+            outline: none;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-submit:hover { background: #219653; }
+        
+        .btn-submit:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .btn-close {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 6px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        #feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 16px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Khung hiển thị Bá Khí ở góc trên bên phải -->
+    <div class="ba-khi-box">
+        Bá khí: <span id="ba-khi-score">0</span>
+    </div>
+
+    <!-- Phần chữ xuất hiện phía trên lưới -->
+    <div class="header-container">
+        <div class="main-title">câu hỏi của heafzedd</div>
+        <div class="sub-title">giải hết = pro + bá khí aura</div>
+    </div>
+
+    <div class="grid-container" id="grid"></div>
+
+    <!-- Cửa sổ hiển thị câu hỏi -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <h2 id="modal-title">CÂU HỎI X</h2>
+            <div id="math-question">Đang tải câu hỏi...</div>
+            <input type="text" id="answer-input" placeholder="Nhập đáp án của bạn vào đây..." autocomplete="off">
+            <br>
+            <button class="btn-submit" id="submit-btn" onclick="checkAnswer()">Trả Lời</button>
+            <button class="btn-close" onclick="closeModal()">Đóng</button>
+            <div id="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        const grid = document.getElementById('grid');
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const questionDisplay = document.getElementById('math-question');
+        const answerInput = document.getElementById('answer-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const feedback = document.getElementById('feedback');
+        const baKhiScoreDisplay = document.getElementById('ba-khi-score');
+        
+        let currentQuestionAnswer = null;
+        let currentCircleId = null;
+        let baKhiScore = 0; 
+        let solvedCount = 0;
+        let isProcessing = false; // Cờ khóa trạng thái chống click nhiều lần
+
+        function updateBaKhiDisplay() {
+            baKhiScoreDisplay.innerText = baKhiScore.toLocaleString();
+        }
+
+        // Khởi tạo 50 hình tròn
+        for (let i = 1; i <= 50; i++) {
+            const circle = document.createElement('div');
+            circle.classList.add('circle');
+            circle.innerText = i;
+            circle.id = 'circle-' + i;
+
+            if (i <= 10) circle.classList.add('c-lv1');
+            else if (i <= 30) circle.classList.add('c-lv2');
+            else if (i <= 40) circle.classList.add('c-lv3');
+            else circle.classList.add('c-lv4');
+
+            circle.onclick = () => openQuestion(i);
+            grid.appendChild(circle);
+        }
+
+        // Bắt sự kiện Enter khi nhập đáp án
+        answerInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                checkAnswer();
+            }
+        });
+
+        function rand(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // MỞ CÂU HỎI THEO CẤP ĐỘ
+        function openQuestion(id) {
+            let circle = document.getElementById('circle-' + id);
+            if (circle.classList.contains('solved')) {
+                return;
+            }
+
+            currentCircleId = id;
+            modalTitle.innerText = `CÂU HỎI ${id}`;
+            answerInput.value = "";
+            feedback.innerText = "";
+            
+            // Mở khóa lại input và nút submit cho câu hỏi mới
+            answerInput.disabled = false;
+            submitBtn.disabled = false;
+            isProcessing = false;
+
+            let qText = "";
+            let qAns = 0;
+
+            if (id <= 10) {
+                let type = rand(1, 2);
+                if (type === 1) {
+                    let a = rand(1, 30);
+                    let b = rand(1, 30);
+                    qText = `${a} + ${b} = ?`;
+                    qAns = a + b;
+                } else {
+                    let a = rand(15, 50);
+                    let b = rand(1, a); 
+                    qText = `${a} - ${b} = ?`;
+                    qAns = a - b;
+                }
+            } 
+            else if (id <= 30) {
+                let type = rand(1, 2);
+                if (type === 1) { 
+                    let a = rand(2, 12);
+                    let b = rand(2, 15);
+                    qText = `${a} × ${b} = ?`;
+                    qAns = a * b;
+                } else { 
+                    let b = rand(2, 15);
+                    let c = rand(2, 15);
+                    let a = b * c;
+                    qText = `${a} ÷ ${b} = ?`;
+                    qAns = c;
+                }
+            }
+            else if (id <= 40) {
+                let type = rand(1, 2);
+                if (type === 1) { 
+                    let a = rand(3, 15);
+                    let b = rand(3, 10);
+                    let c = rand(5, 50);
+                    qText = `${a} × ${b} + ${c} = ?`;
+                    qAns = (a * b) + c;
+                } else { 
+                    let x = rand(2, 15);
+                    let a = rand(2, 10);
+                    let b = rand(1, 20);
+                    let c = (a * x) - b;
+                    qText = `Tìm X biết:\n${a} × X - ${b} = ${c}`;
+                    qAns = x;
+                }
+            }
+            else {
+                let type = rand(1, 4);
+                if (type === 1) { 
+                    let k = rand(2, 6);
+                    let c = rand(1, 5);
+                    qText = `Cho hàm số f(x) = ${k}x².\nTính đạo hàm f'(${c}) = ?`;
+                    qAns = 2 * k * c;
+                } else if (type === 2) { 
+                    let a = rand(1, 4);
+                    let k = rand(1, 4) * 2; 
+                    qText = `Tích phân từ 0 đến ${a} của (${k}x)dx = ?`;
+                    qAns = (k / 2) * (a * a);
+                } else if (type === 3) { 
+                    let k = rand(2, 9);
+                    qText = `Tính giới hạn:\nlim(x→0) [sin(${k}x) / x] = ?`;
+                    qAns = k;
+                } else { 
+                    let a = rand(2, 6); let b = rand(1, 5);
+                    let c = rand(1, 5); let d = rand(2, 6);
+                    qText = `Tính định thức ma trận vuông 2x2:\n| ${a}    ${b} |\n| ${c}    ${d} |`;
+                    qAns = (a * d) - (b * c);
+                }
+            }
+
+            questionDisplay.innerText = qText;
+            currentQuestionAnswer = qAns;
+            modal.style.display = 'flex';
+            setTimeout(() => answerInput.focus(), 100);
+        }
+
+        // KIỂM TRA ĐÁP ÁN (CHỐNG AUTO CLICK)
+        function checkAnswer() {
+            if (isProcessing) return; // Nếu đang xử lý thì chặn không cho bấm tiếp
+            if (answerInput.value.trim() === "") return;
+            
+            isProcessing = true; // Kích hoạt cờ khóa
+            answerInput.disabled = true;
+            submitBtn.disabled = true;
+
+            let userAns = parseInt(answerInput.value.trim());
+            let circle = document.getElementById('circle-' + currentCircleId);
+
+            if (userAns === currentQuestionAnswer) {
+                // Riêng câu 50 thưởng 2.000.000, các câu khác thưởng 999.999
+                let reward = (currentCircleId === 50) ? 2000000 : 999999;
+                
+                baKhiScore += reward;
+                updateBaKhiDisplay();
+
+                feedback.style.color = "#2ecc71";
+                feedback.innerText = ` +${reward.toLocaleString()} Bá Khí`;
+
+                circle.classList.add('solved');
+                circle.innerText = "✔";
+                solvedCount++;
+
+                setTimeout(() => {
+                    closeModal();
+                    if (solvedCount === 50) {
+                        alert("👑 CHÚNG MỪNG BẠN! BẠN ĐÃ HOÀN THÀNH XUẤT SẮC 50 CỬA ẢI TOÁN HỌC!\n🔥 Đích thực là PRO TOÀN NĂNG - BÁ KHÍ AURA TỎA SÁNG RỰC RỠ! 🚀");
+                    }
+                }, 800);
+
+            } else {
+                baKhiScore -= 99999;
+                updateBaKhiDisplay();
+
+                feedback.style.color = "#e74c3c";
+                feedback.innerText = "❌  -99,999 Bá Khí";
+
+                setTimeout(() => {
+                    closeModal();
+                }, 800);
+            }
+        }
+
+        // ĐÓNG MODAL
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
+
+<script>
+    // Kiểm tra xem trình duyệt này đã được cấp quyền admin chưa
+    if (localStorage.getItem('isAdminUnlocked') !== 'true') {
+        
+        // Chặn phím tắt mở F12, Ctrl+Shift+I, Ctrl+U
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || 
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+                alert('Tính năng này đã bị khóa đối với người chơi!');
+            }
+        });
+
+        // Chặn nhấn chuột phải
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    }
+</script>
+
+<!-- Default Statcounter code for meow -->
+<script type="text/javascript">
+var sc_project=13356885; 
+var sc_invisible=1; 
+var sc_security="6ef11a06"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13356885/0/6ef11a06/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
